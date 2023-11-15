@@ -1,0 +1,36 @@
+l = 50; 
+w = 50; 
+h = 50; 
+hole_r = 7; 
+top_cyl_h = 5; 
+top_cyl_r = 10; 
+num_units = 4; 
+show_stack = true; 
+
+
+
+module full_unit(){
+    module base_unit(){
+    difference() {
+        cube([l, w, h], center = false);
+        translate([0, w/2,h/2]) rotate([0,90,0])cylinder(h = l, r = hole_r, center = true);
+        translate([l/2, 0, h/2]) rotate([90,0,0])cylinder(h = w, r = hole_r, center = true);
+        translate([l, w/2, h/2]) rotate([0,90,0]) cylinder(h = l, r = hole_r, center = true);
+        translate([l/2,w, h/2]) rotate([90,0,0]) cylinder(h = w, r = hole_r, center = true);
+        translate([l/2,w/2,0]) cylinder(r=top_cyl_r, h=top_cyl_h, center = true); 
+    }
+    translate([l/2,w/2,h]) cylinder(r = top_cyl_r, h = top_cyl_h);
+    }
+    base_unit(); 
+    for (i = [1:1:num_units]){
+    mirror([1,0,0]){
+        translate([-l*i,0,0]) 
+    base_unit(); 
+    }
+    }
+}
+
+if (show_stack){
+    translate([0, 0, -h]) full_unit(); 
+    full_unit(); 
+}
